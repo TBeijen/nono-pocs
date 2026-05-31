@@ -1,0 +1,74 @@
+nono profile: profile 'claude-code-tb'
+
+  Description:  Claude Code customization for TB
+  Extends:      claude-code
+
+  Security groups:
+    deny_credentials
+    deny_keychains_macos
+    deny_keychains_linux
+    deny_browser_data_macos
+    deny_browser_data_linux
+    deny_macos_private
+    deny_shell_history
+    deny_shell_configs
+    system_read_macos
+    system_read_linux_core
+    system_write_macos
+    system_write_linux
+    user_tools
+    homebrew_macos
+    homebrew_linux
+    dangerous_commands
+    dangerous_commands_macos
+    dangerous_commands_linux
+    claude_code_macos
+    claude_code_linux
+    user_caches_macos
+    claude_cache_linux
+    node_runtime
+    rust_runtime
+    python_runtime
+    vscode_macos
+    vscode_linux
+    linux_sysfs_read
+    nix_runtime
+    git_config
+    unlink_protection
+  Signal mode:   Isolated
+  Capability elevation: disabled
+
+  Filesystem:
+    allow (r+w):
+      $HOME/.claude                        -> /Users/tbeijen01/.claude
+      $HOME/.cache/claude                  -> /Users/tbeijen01/.cache/claude
+      $HOME/.config/nono/profiles          -> /Users/tbeijen01/.config/nono/profiles
+      /tmp/claude-$UID
+      $HOME/Library/Keychains              -> /Users/tbeijen01/Library/Keychains
+    read:
+      $HOME/.config/nono/packages          -> /Users/tbeijen01/.config/nono/packages
+      $HOME/.config/gh                     -> /Users/tbeijen01/.config/gh
+      $HOME/dotfiles                       -> /Users/tbeijen01/dotfiles
+    allow_file (r+w):
+      $HOME/.claude.json                   -> /Users/tbeijen01/.claude.json
+      $HOME/.claude.json.lock              -> /Users/tbeijen01/.claude.json.lock
+      $HOME/.claude.lock                   -> /Users/tbeijen01/.claude.lock
+    read_file:
+      $HOME/.zscaler/bundle_combined.pem   -> /Users/tbeijen01/.zscaler/bundle_combined.pem
+      $HOME/.gitconfig-dpg                 -> /Users/tbeijen01/.gitconfig-dpg
+    deny:
+      $HOME/Library/Keychains              -> /Users/tbeijen01/Library/Keychains
+    bypass_protection: $HOME/Library/Keychains
+
+  Workdir access:  ReadWrite
+
+  Rollback exclusions:
+    node_modules
+    .next
+    __pycache__
+    target
+    glob: *.tmp.[0-9]*.[0-9]*
+
+  Open URLs:
+    localhost allowed
+    https://claude.ai
