@@ -1,0 +1,129 @@
+==============================================
+ Credential Broker Test Suite
+==============================================
+
+  nono (stable):  /opt/homebrew/bin/nono (nono 0.59.0)
+  nono (custom):  /Users/tbeijen01/projects/personal/always-further/nono/target/debug/nono (nono 0.58.0)
+  test script:    /Users/tbeijen01/projects/personal/nono-pocs/broker-test/test-keychain-access.sh
+
+Verifying test Keychain items exist...
+  OK
+
+Press Enter to start Scenario 1 (default profile, full Keychain access)...
+
+==============================================
+ Scenario 1: Default (claude-code profile)
+ Expected: ALL items accessible
+==============================================
+
+=== Keychain Credential Access Test ===
+  Date: Sun May 31 08:40:31 CEST 2026
+  PID:  3053
+
+  WARNING: Not running inside a nono sandbox
+  Credential broker: not active
+  security binary: /usr/bin/security
+
+--- Test 1: Read ALLOWED item (service=nono-broker-test-allowed) ---
+  RESULT: ACCESS GRANTED
+  Secret: secret-allowed-value
+
+--- Test 2: Read BLOCKED item (service=nono-broker-test-blocked) ---
+  RESULT: ACCESS GRANTED
+  Secret: secret-blocked-value
+
+--- Test 3: Read GitHub credentials (service=gh:github.com) ---
+  RESULT: ACCESS GRANTED (secret redacted)
+
+--- Test 4: gh auth status ---
+  warning: failed to load config: open /Users/tbeijen01/.config/gh/config.yml: operation not permitted
+  failed to create root command: failed to read configuration: open /Users/tbeijen01/.config/gh/config.yml: operation not permitted
+
+
+=== Tests complete ===
+
+Press Enter to start Scenario 2 (no-keychain profile, all blocked)...
+
+==============================================
+ Scenario 2: No Keychain (claude-code-no-keychain profile)
+ Expected: ALL items denied
+==============================================
+
+=== Keychain Credential Access Test ===
+  Date: Sun May 31 08:40:32 CEST 2026
+  PID:  3081
+
+  WARNING: Not running inside a nono sandbox
+  Credential broker: not active
+  security binary: /usr/bin/security
+
+--- Test 1: Read ALLOWED item (service=nono-broker-test-allowed) ---
+  RESULT: ACCESS DENIED
+  Error:  security: SecKeychainSearchCreateFromAttributes: One or more parameters passed to a function were not valid.
+security: SecKeychainSearchCopyNext: The specified item could not be found in the keychain.
+
+--- Test 2: Read BLOCKED item (service=nono-broker-test-blocked) ---
+  RESULT: ACCESS DENIED
+  Error:  security: SecKeychainSearchCreateFromAttributes: One or more parameters passed to a function were not valid.
+security: SecKeychainSearchCopyNext: The specified item could not be found in the keychain.
+
+--- Test 3: Read GitHub credentials (service=gh:github.com) ---
+  RESULT: ACCESS DENIED
+  Error:  security: SecKeychainSearchCreateFromAttributes: One or more parameters passed to a function were not valid.
+security: SecKeychainSearchCopyNext: The specified item could not be found in the keychain.
+
+--- Test 4: gh auth status ---
+  warning: failed to load config: open /Users/tbeijen01/.config/gh/config.yml: operation not permitted
+  failed to create root command: failed to read configuration: open /Users/tbeijen01/.config/gh/config.yml: operation not permitted
+
+
+=== Tests complete ===
+
+Press Enter to start Scenario 3 (broker profile, selective access)...
+
+==============================================
+ Scenario 3: Credential Broker
+ Expected: nono-broker-test-allowed GRANTED
+           nono-broker-test-blocked DENIED
+           gh:github.com            DENIED
+==============================================
+
+=== Keychain Credential Access Test ===
+  Date: Sun May 31 08:40:51 CEST 2026
+  PID:  3241
+
+  WARNING: Not running inside a nono sandbox
+  Credential broker: ACTIVE
+  security binary: /var/folders/by/6z70txmd0fngtw43p132tbjw0000gp/T/nono-security-8tZZgH/security
+
+--- Test 1: Read ALLOWED item (service=nono-broker-test-allowed) ---
+  RESULT: ACCESS GRANTED
+  Secret: secret-allowed-value
+
+--- Test 2: Read BLOCKED item (service=nono-broker-test-blocked) ---
+  RESULT: ACCESS DENIED
+  Error:  nono: Sandbox initialization failed: credential request did not match profile credential_access policy
+
+--- Test 3: Read GitHub credentials (service=gh:github.com) ---
+  RESULT: ACCESS DENIED
+  Error:  nono: Sandbox initialization failed: credential request did not match profile credential_access policy
+
+--- Test 4: gh auth status ---
+  github.com
+    ✓ Logged in to github.com account tibo-beijen1_DPGMEDIA (keyring)
+    - Active account: true
+    - Git operations protocol: ssh
+    - Token: gho_************************************
+    - Token scopes: 'gist', 'read:org', 'repo'
+
+    ✓ Logged in to github.com account TBeijen (keyring)
+    - Active account: false
+    - Git operations protocol: ssh
+    - Token: gho_************************************
+    - Token scopes: 'gist', 'read:org', 'repo'
+
+=== Tests complete ===
+
+==============================================
+ All scenarios complete
+==============================================
