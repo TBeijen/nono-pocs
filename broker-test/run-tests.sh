@@ -5,7 +5,7 @@
 #   1. Run setup-keychain-items.sh first (outside any sandbox)
 #   2. Build nono from the keychain-broker-prototype branch:
 #      cd ~/projects/personal/always-further/nono
-#      cargo build --release -p nono-cli
+#      make build
 #
 # This script runs three scenarios and you compare the output.
 
@@ -52,7 +52,7 @@ echo " Scenario 1: Default (claude-code profile)"
 echo " Expected: ALL items accessible"
 echo "=============================================="
 echo ""
-"$NONO_STABLE" run \
+"$NONO_STABLE" run --silent \
     --profile claude-code \
     --allow "$WORKDIR" \
     -- bash "$TEST_SCRIPT"
@@ -66,7 +66,7 @@ echo " Scenario 2: No Keychain (claude-code-no-keychain profile)"
 echo " Expected: ALL items denied"
 echo "=============================================="
 echo ""
-"$NONO_STABLE" run \
+"$NONO_STABLE" run --silent \
     --profile claude-code-no-keychain \
     --allow "$WORKDIR" \
     -- bash "$TEST_SCRIPT"
@@ -83,7 +83,7 @@ echo "           gh:github.com            DENIED"
 echo "=============================================="
 echo ""
 NONO_EXPERIMENTAL_KEYCHAIN_BROKER=1 \
-"$NONO_CUSTOM" run \
+"$NONO_CUSTOM" run --silent \
     --profile claude-code-tb-broker-test \
     --allow "$WORKDIR" \
     -- bash "$TEST_SCRIPT"

@@ -8,8 +8,8 @@ echo "  PID:  $$"
 echo ""
 
 # Check if we're in a nono sandbox
-if [ -n "${NONO_SESSION_ID:-}" ]; then
-    echo "  Running inside nono sandbox (session: $NONO_SESSION_ID)"
+if [ -n "${NONO_CAP_FILE:-}" ]; then
+    echo "  Running inside nono sandbox"
 else
     echo "  WARNING: Not running inside a nono sandbox"
 fi
